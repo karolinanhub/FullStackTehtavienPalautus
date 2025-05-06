@@ -1,4 +1,8 @@
-import { useState } from 'react'
+import { useState } from 'react';
+import Filter from './components/Filter';
+import PersonForm from './components/PersonForm';  
+import Persons from './components/Persons';
+
 
 const App = () => {
   // esimerkkkidataa kovakoodatttuna
@@ -9,15 +13,15 @@ const App = () => {
     { name: 'Mary Poppendieck', number: '39-23-6423122' }
   ])
   // lista on tyhjillään
-  const [newName, setNewName] = useState([''])
-  const [newNumber, setNewNumber] = useState([''])
+  const [newName, setNewName] = useState('');
+  const [newNumber, setNewNumber] = useState('');
   // filteri eli rajaus
-  const [newfilter, setNewFilter] = useState('')
+  const [newfilter, setNewFilter] = useState('');
 
 
   const addName = (event) => {
         event.preventDefault()
-        console.log('button clicked', event.target)
+        //console.log('button clicked', event.target)
         // some-metodi käy läpi taulukon ja palauttaa true, jos jokin ehto täyttyy. toimii erityisesti taulukon kanssa, jossa on olioita
         //esim includes metodi toimii vain perusdatatyypeillä, kuten string
         if (persons.some(person => person.name === newName)) {
@@ -39,58 +43,46 @@ const App = () => {
         setNewName('')
         setNewNumber('')
         setNewFilter('')
-  }
+  };
 
 
   const handleNameChange = (event) => { 
     setNewName(event.target.value)  
-  }
+  };
 
   const handleNumberChange = (event) => { 
     setNewNumber(event.target.value)  
-  }
+  };
 
   const handleFilterChange = (event) => { 
     setNewFilter(event.target.value)  
-  }
+  };
 
+  // jos persons on tyhjillään, niin ei tarvitse filtteröidä
   // varmista, että toimii vaikka olisi tyhjä käyttämällä String-metodia
   // case insensitive
-  const filteredPersons = persons.filter(person => 
+  const filteredPersons = persons.length === 0 ? persons : persons.filter(person => 
     person.name.toLowerCase().includes(String(newfilter).toLowerCase())
-  )
+  );
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>filter shown with:
-        <input value = {newfilter}
-        onChange={handleFilterChange}></input>
-
-      </div> 
-      <h2>add a new</h2>
-        <form onSubmit={addName}>
-          <div>name: 
-            <input value = {newName}
-            onChange={handleNameChange}/>
-          </div>
-          <div>number: 
-            <input value ={newNumber}
-            onChange={handleNumberChange}/>
-          </div>
-          <div>
-            <button type="submit">add</button>
-          </div>
-        </form>
+          <Filter 
+          handleFilterChange={handleFilterChange}/>
+      <h2>Add a new</h2>
+        <PersonForm 
+          newName={newName} 
+          handleNameChange={handleNameChange} 
+          newNumber={newNumber} 
+          handleNumberChange={handleNumberChange} 
+          addName={addName} />  
       <h2>Numbers</h2>
-      <ul style={{ listStyleType: 'none' }}>
-        {filteredPersons.map(person => (
-          <li key={person.name}>{person.name + " "}{person.number}</li>
-        ))}
-      </ul>
+        <Persons 
+          filteredPersons={filteredPersons} />
     </div>
-  )
+  );
 
-}
+};
 
 export default App
