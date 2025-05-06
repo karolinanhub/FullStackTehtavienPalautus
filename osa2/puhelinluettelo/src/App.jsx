@@ -9,6 +9,13 @@ const App = () => {
   const addName = (event) => {
         event.preventDefault()
         console.log('button clicked', event.target)
+        // some-metodi käy läpi taulukon ja palauttaa true, jos jokin ehto täyttyy. toimii erityisesti taulukon kanssa, jossa on olioita
+        //esim includes metodi toimii vain perusdatatyypeillä, kuten string
+        if (persons.some(person => person.content === newName)) {
+          alert(`${newName} is already added to phonebook`)
+          setNewName('')
+          return
+        }
         const personObject = {
           content: newName,
           //important: Math.random() > 0.5,
