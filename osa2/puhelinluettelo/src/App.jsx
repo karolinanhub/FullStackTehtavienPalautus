@@ -44,18 +44,33 @@ const App = () => {
         //console.log('button clicked', event.target)
         // some-metodi käy läpi taulukon ja palauttaa true, jos jokin ehto täyttyy. toimii erityisesti taulukon kanssa, jossa on olioita
         //esim includes metodi toimii vain perusdatatyypeillä, kuten string
-        if (persons.some(person => person.name === newName)) {
-          alert(`${newName} is already added to phonebook`)
+        if (persons.some(person => person.name === newName.trim())) {
+          if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
+            const existingPerson = persons.find(person => person.name === newName);
+            const updatedPerson = { ...existingPerson, number: newNumber };
+            personService
+              .update(existingPerson.id, updatedPerson)
+              .then(response => {
+                setPersons(
+                  persons.map(p => p.id !== response.data.id ? p : response.data)
+                ); 
+              })
+              .catch(error => {
+                alert('Failed to update');
+              });
+
+          }
+        
+
           setNewName('')
           setNewNumber('')
           setNewFilter('')
-          return
-        }
+        } else { 
         const personObject = {
           name: newName,
           number: newNumber,
           //important: Math.random() > 0.5,
-          id: String(persons.length + 1),
+          //id: String(persons.length + 1),
         }
         personService
         .create(personObject)
@@ -65,6 +80,7 @@ const App = () => {
           setNewNumber('')
           setNewFilter('')
         })
+      }
   };
 
 
