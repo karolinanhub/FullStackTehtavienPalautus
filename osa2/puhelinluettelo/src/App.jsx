@@ -80,6 +80,23 @@ const App = () => {
     setNewFilter(event.target.value)  
   };
 
+  const handleDelete = (person) => {
+   // console.log("handleDelete sai:", person);
+    if (window.confirm(`Delete ${person.name} ?`)) {
+      personService
+        .deletePerson(person.id)
+        .then(() => {
+          // poistaminen tapahtuu metodilla filter, joka muodostaa uuden taulukon, jonka sisällöksi tulee alkuperäisen taulukon sisällöstä ne alkiot, joille parametrina oleva funktio palauttaa arvon true:
+          setPersons(persons.filter(p => p.id !== person.id));
+        })
+        .catch(error => {
+          alert(`The person '${person.name}' was already deleted from the server`);
+          // poistetaan henkilö myös paikallisesta tilasta
+          setPersons(persons.filter(p => p.id !== person.id)); 
+        });
+    }
+  };
+
   // jos persons on tyhjillään, niin ei tarvitse filtteröidä
   // varmista, että toimii vaikka olisi tyhjä käyttämällä String-metodia
   // case insensitive
@@ -101,7 +118,8 @@ const App = () => {
           addName={addName} />  
       <h2>Numbers</h2>
         <Persons 
-          filteredPersons={filteredPersons} />
+          filteredPersons={filteredPersons}
+          handleDelete={handleDelete} />
     </div>
   );
 

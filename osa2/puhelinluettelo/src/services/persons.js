@@ -13,10 +13,10 @@ const update = (id, newObject) => {
   return axios.put(`${baseUrl}/${id}`, newObject)
 }
 
-export default { 
-  getAll: getAll, 
-  create: create, 
-  update: update 
+const deletePerson = (id, newObject) => {
+    return axios.delete(`${baseUrl}/${id}`, newObject)
 }
+
+export default { getAll, create, update, deletePerson};
 
 // Moduuli palauttaa nyt olion, jonka kenttinä (getAll, create ja update) on kolme persoonien käsittelyä hoitavaa funktiota.
