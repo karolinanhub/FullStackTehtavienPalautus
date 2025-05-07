@@ -4,6 +4,7 @@ import axios from 'axios';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';  
 import Persons from './components/Persons';
+import personService from './services/persons';
 
 
 const App = () => {
@@ -24,18 +25,19 @@ const App = () => {
 
   const hook = () => {
     console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
-      })
-  }
+      personService
+        .getAll()
+        .then(response => {
+          setPersons(response.data)
+        });
+  };
+  
   // oletusarvoisesti efekti suoritetaan aina, kun komponentti renderöidään
   // mutta tyhjällä taulukolla kerrotaan, että efekti suoritetaan vain kerran
   // eli kun komponentti ladataan ensimmäisen kerran
   useEffect(hook, []); 
  // jos lisäämme uusia ihmisiä, ne eivät tallennu vielä  palvelimelle asti
+
 
   const addName = (event) => {
         event.preventDefault()
@@ -55,21 +57,14 @@ const App = () => {
           //important: Math.random() > 0.5,
           id: String(persons.length + 1),
         }
-
-        // Olio lähetetään palvelimelle käyttämällä Axiosin metodia post 
-        // palvelin lisää henkilölle id:n automaattisesti
-        // Koska POST-pyynnössä lähettämämme data oli JavaScript-olio, osasi Axios automaattisesti asettaa pyynnön Content-type-headerille oikean arvon eli application/json.
-        axios
-          .post('http://localhost:3001/persons', personObject)
-          .then(response => {
-            console.log(response)
-            //metodi concat yhdistää kaksi taulukkoa uudeksi taulukoksi
-            setPersons(persons.concat(response.data))
-            //tyhjennetään input-kenttä
-            setNewName('')
-            setNewNumber('')
-            setNewFilter('')
-          })
+        personService
+        .create(personObject)
+        .then(response => {
+          setPersons(persons.concat(response.data))
+          setNewName('')
+          setNewNumber('')
+          setNewFilter('')
+        })
   };
 
 
