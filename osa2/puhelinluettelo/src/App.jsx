@@ -55,12 +55,21 @@ const App = () => {
           //important: Math.random() > 0.5,
           id: String(persons.length + 1),
         }
-        //metodi concat yhdistää kaksi taulukkoa uudeksi taulukoksi
-        setPersons(persons.concat(personObject))
-        //tyhjennetään input-kenttä
-        setNewName('')
-        setNewNumber('')
-        setNewFilter('')
+
+        // Olio lähetetään palvelimelle käyttämällä Axiosin metodia post 
+        // palvelin lisää henkilölle id:n automaattisesti
+        // Koska POST-pyynnössä lähettämämme data oli JavaScript-olio, osasi Axios automaattisesti asettaa pyynnön Content-type-headerille oikean arvon eli application/json.
+        axios
+          .post('http://localhost:3001/persons', personObject)
+          .then(response => {
+            console.log(response)
+            //metodi concat yhdistää kaksi taulukkoa uudeksi taulukoksi
+            setPersons(persons.concat(response.data))
+            //tyhjennetään input-kenttä
+            setNewName('')
+            setNewNumber('')
+            setNewFilter('')
+          })
   };
 
 
