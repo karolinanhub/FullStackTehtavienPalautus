@@ -5,6 +5,9 @@ import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';  
 import Persons from './components/Persons';
 import personService from './services/persons';
+import Notification from './components/Notification.jsx';
+import './index.css';
+
 
 
 const App = () => {
@@ -22,6 +25,8 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('');
   // filteri eli rajaus
   const [newfilter, setNewFilter] = useState('');
+  //virheilmoitus
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const hook = () => {
     console.log('effect')
@@ -54,9 +59,16 @@ const App = () => {
                 setPersons(
                   persons.map(p => p.id !== response.data.id ? p : response.data)
                 ); 
+                setErrorMessage(`Updated ${response.data.name} phone number`);
+                setTimeout(() => {
+                  setErrorMessage(null);
+                }, 5000); 
               })
               .catch(error => {
-                alert('Failed to update');
+                setErrorMessage('Failed to update');
+                setTimeout(() => {
+                  setErrorMessage(null);
+                }, 5000);
               });
 
           }
@@ -79,6 +91,10 @@ const App = () => {
           setNewName('')
           setNewNumber('')
           setNewFilter('')
+          setErrorMessage(`Added ${response.data.name}`)
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000); 
         })
       }
   };
@@ -104,9 +120,17 @@ const App = () => {
         .then(() => {
           // poistaminen tapahtuu metodilla filter, joka muodostaa uuden taulukon, jonka sisällöksi tulee alkuperäisen taulukon sisällöstä ne alkiot, joille parametrina oleva funktio palauttaa arvon true:
           setPersons(persons.filter(p => p.id !== person.id));
+          setErrorMessage(`Deleted ${person.name}`);
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);   
         })
         .catch(error => {
-          alert(`The person '${person.name}' was already deleted from the server`);
+          setErrorMessage(`The person '${person.name}' was already deleted from the server`);
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
+
           // poistetaan henkilö myös paikallisesta tilasta
           setPersons(persons.filter(p => p.id !== person.id)); 
         });
@@ -123,6 +147,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+        <Notification message={errorMessage} />
         <Filter 
           handleFilterChange={handleFilterChange}/>
       <h2>Add a new</h2>
