@@ -126,7 +126,7 @@ const App = () => {
           }, 5000);   
         })
         .catch(error => {
-          setErrorMessage(`The person '${person.name}' was already deleted from the server`);
+          setErrorMessage(`Information of '${person.name}' has already been removed from the server`);
           setTimeout(() => {
             setErrorMessage(null);
           }, 5000);
