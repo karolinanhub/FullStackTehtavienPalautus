@@ -3,9 +3,12 @@
 const http = require('http')
 
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
 app.use(express.json())
+app.use(morgan('tiny'))
+
 let persons = [
     { 
       "name": "Arto Artonen", 
@@ -74,6 +77,9 @@ app.post('/api/persons', (request, response) => {
   persons = persons.concat(person)
   response.json(person)
 })
+
+
+
 
 
 const PORT = 3001
