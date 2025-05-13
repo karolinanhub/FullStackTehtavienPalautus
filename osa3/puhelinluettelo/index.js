@@ -61,6 +61,10 @@ app.post('/api/persons', (request, response) => {
     return response.status(400).json({ error: 'Name or number missing' })
   }
 
+  if (persons.some(person => person.name === body.name)) {
+    return response.status(400).json({ error: 'Name must be unique' })
+  }
+
   const person = {
     "name": body.name,
     "number": body.number,
