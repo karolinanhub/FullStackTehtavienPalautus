@@ -1,3 +1,5 @@
+
+
 const http = require('http')
 
 const express = require('express')
@@ -26,8 +28,9 @@ let persons = [
     }
 ]
 
+//vain yksi repsonse.send kutus, sillä se lähettää vastauksen ja sulkee yhteyden
 app.get('/', (request, response) => {
-  response.send('<h1>Hello World!</h1>')
+  response.send(`<p>Phonebook has info for ${persons.length} people</p><p>${new Date()}</p>`)
 })
 
 app.get('/api/persons', (request, response) => {
