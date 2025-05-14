@@ -1,17 +1,46 @@
-
-
+require('dotenv').config()
 const http = require('http')
-
+const mongoose = require('mongoose')
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
 const app = express()
+const Person = require('./models/person')
 
 
 app.use(express.static('dist'))
 app.use(cors()) // CORS (Cross-Origin Resource Sharing) on käytössä, jotta eri domainit voivat käyttää resursseja
 
 app.use(express.json())
+
+//----------------------------------------------------------
+const password = process.argv[2]
+
+const url = `mongodb+srv://fullstackkarkki:${password}@cluster0.8trbrmb.mongodb.net/puhelinluettelo?retryWrites=true&w=majority&appName=Cluster0`
+
+mongoose.set('strictQuery', false)
+mongoose.connect(url)
+
+const personSchema = new mongoose.Schema({
+  name: String,
+  number: String,
+})
+
+//muokataan vielä kannasta haettavat oliot merkkijonoksi
+personSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString()
+    delete returnedObject._id
+    delete returnedObject.__v
+  }
+})
+
+//Collection name is people
+// const Person = mongoose.model('Person', personSchema)
+
+
+//----------------------------------------------------------------
+
 
 
 app.use(morgan(function (tokens, req, res) {
@@ -54,7 +83,9 @@ app.get('/', (request, response) => {
 })
 
 app.get('/api/persons', (request, response) => {
-  response.json(persons)
+  Person.find({}).then(persons => {
+    response.json(persons)
+  })
 })
 
 app.get('/api/persons/:id', (request, response) => {
@@ -95,6 +126,6 @@ app.post('/api/persons', (request, response) => {
 })
 
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT 
 app.listen(PORT)
 console.log(`Server running on port ${PORT}`)
