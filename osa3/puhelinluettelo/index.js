@@ -13,7 +13,7 @@ app.use(cors()) // CORS (Cross-Origin Resource Sharing) on käytössä, jotta er
 
 app.use(express.json())
 
-//----------------------------------------------------------
+/*----------------------------------------------------------
 const password = process.argv[2]
 
 const url = `mongodb+srv://fullstackkarkki:${password}@cluster0.8trbrmb.mongodb.net/puhelinluettelo?retryWrites=true&w=majority&appName=Cluster0`
@@ -39,7 +39,7 @@ personSchema.set('toJSON', {
 // const Person = mongoose.model('Person', personSchema)
 
 
-//----------------------------------------------------------------
+//----------------------------------------------------------------*//
 
 
 
