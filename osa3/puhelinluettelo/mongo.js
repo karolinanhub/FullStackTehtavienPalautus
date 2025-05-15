@@ -25,14 +25,14 @@ if (process.argv.length < 5) {
   // Jos argumentteja on vähemmän kuin 5, tulostetaan kaikki henkilöt
   // find.hakuehto. koska {} on tyhjä, saadaan kaikki
   Person
-  .find({})
-  .then(result => {
-    console.log('puhelinluettelo:')
-    result.forEach(person => {
-      console.log(person.name, person.number)
+    .find({})
+    .then(result => {
+      console.log('puhelinluettelo:')
+      result.forEach(person => {
+        console.log(person.name, person.number)
+      })
+      mongoose.connection.close() // suljetaan yhteys kohdassa .then
     })
-    mongoose.connection.close() // suljetaan yhteys kohdassa .then
-  })
   return
 }
 

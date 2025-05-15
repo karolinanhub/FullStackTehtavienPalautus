@@ -1,6 +1,4 @@
 require('dotenv').config()
-const http = require('http')
-const mongoose = require('mongoose')
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
@@ -46,32 +44,32 @@ app.use(morgan(function (tokens, req, res) {
     tokens.url(req, res),
     tokens.status(req, res),
     tokens.res(req, res, 'content-length'), '-',
-    tokens['response-time'](req, res), 'ms', 
+    tokens['response-time'](req, res), 'ms',
     JSON.stringify(req.body)
   ].join(' ')
 }))
 
 let persons = [
-    { 
-      "name": "Arto Artonen", 
-      "number": "040-123456",
-      "id": "1"
-    },
-    { 
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523",
-      "id": "2"
-    },
-    { 
-      "name": "Dan Abramov", 
-      "number": "12-43-234345",
-      "id": "3"
-    },
-    { 
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122",
-      "id": "4"
-    }
+  {
+    'name': 'Arto Artonen',
+    'number': '040-123456',
+    'id': '1'
+  },
+  {
+    'name': 'Ada Lovelace',
+    'number': '39-44-5323523',
+    'id': '2'
+  },
+  {
+    'name': 'Dan Abramov',
+    'number': '12-43-234345',
+    'id': '3'
+  },
+  {
+    'name': 'Mary Poppendieck',
+    'number': '39-23-6423122',
+    'id': '4'
+  }
 ]
 
 //vain yksi repsonse.send kutus, sillä se lähettää vastauksen ja sulkee yhteyden
@@ -87,18 +85,18 @@ app.get('/api/persons', (request, response) => {
 
 app.get('/api/persons/:id', (request, response, next) => {
   Person.findById(request.params.id)
-  .then(person => {
-    if (person) {
-      response.json(person)
-    } else {
-      response.status(404).end()
-    }
-  })
-  .catch(error => next(error)) 
+    .then(person => {
+      if (person) {
+        response.json(person)
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => next(error))
     //console.log(error)
     //response.status(400).send({ error: 'malformatted id' }) //bad request
-  })
-  /*const id = request.params.id
+})
+/*const id = request.params.id
   const person = persons.find(person => person.id === id)
   if (person) {
     response.json(person)
@@ -109,10 +107,10 @@ app.get('/api/persons/:id', (request, response, next) => {
 
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndDelete(request.params.id)
-  .then(result => {
+    .then(() => {
       response.status(204).end()
-  })
-  .catch(error => next(error))  
+    })
+    .catch(error => next(error))
 //  const id = request.params.id
 //  persons = persons.filter(person => person.id !== id)
 //  response.status(204).end() // 204 No Content
@@ -124,12 +122,11 @@ app.post('/api/persons', (request, response, next) => {
   if (!body.name || !body.number) {
     return response.status(400).json({ error: 'Name or number missing' })
   }
- //   return response.status(400).json({ error: 'Name must be unique' }) /
- 
+  //   return response.status(400).json({ error: 'Name must be unique' }) /
 
   const person = new Person({
-    "name": body.name,
-    "number": body.number,
+    'name': body.name,
+    'number': body.number,
     // "id": (Math.round(Math.random() * 100000).toString())
   })
 
@@ -179,6 +176,6 @@ const errorHandler = (error, request, response, next) => {
 
 app.use(errorHandler)
 
-const PORT = process.env.PORT 
+const PORT = process.env.PORT
 app.listen(PORT)
 console.log(`Server running on port ${PORT}`)
