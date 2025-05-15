@@ -96,6 +96,10 @@ const App = () => {
             setErrorMessage(null);
           }, 5000); 
         })
+        .catch(error => {
+          console.log(error.response.data)
+          setErrorMessage(error.response.data.error);
+        })
       }
   };
 
