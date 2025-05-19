@@ -6,4 +6,4 @@ Content-Type: application/json
   "author": "Janne",
   "url": "www.blogi.com",
   "likes": 1
-}
+}0
