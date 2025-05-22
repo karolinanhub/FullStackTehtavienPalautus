@@ -17,17 +17,17 @@ blogsRouter.post('/', async (request, response) => {
   }
 
   const blog = new Blog({
-    title: blog.title,
-    author: blog.author,
-    url: blog.url,
-    likes: blog.likes,
+    title: body.title,
+    author: body.author,
+    url: body.url,
+    likes: body.likes,
     user: user._id
   })
 
-  if (!blog.likes){
+  if (!body.likes){
     blog.likes = 0
   }
-  if (!blog.title || !blog.url) {
+  if (!body.title || !body.url) {
     return response.status(400).json({ error: 'title or url missing' }) // 400 Bad Request
   }
   const savedBlog = await blog.save()
