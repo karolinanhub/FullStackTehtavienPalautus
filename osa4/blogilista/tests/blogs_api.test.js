@@ -67,6 +67,7 @@ test('a blog without likes has 0 likes', async () => {
     title: "TDD harms architecture",
     author: "Robert C. Martin",
     url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
+    user: user._id
   }
   await api
     .post('/api/blogs')

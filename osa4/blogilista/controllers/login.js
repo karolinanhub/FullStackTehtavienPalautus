@@ -22,7 +22,7 @@ loginRouter.post('/', async (request, response) => {
     id: user._id,
   }
 
-  const token = jwt.sign(userForToken, process.env.SECRET) // luodaan token, joka sisältää käyttääjän tunnuksen ja id:n, digitaalisesti allekirjoitettu SECRET avaimella
+  const token = jwt.sign(userForToken, process.env.SECRET,{ expiresIn: 60*60 }) // luodaan token, joka sisältää käyttääjän tunnuksen ja id:n, digitaalisesti allekirjoitettu SECRET avaimella
 
   response
     .status(200)
