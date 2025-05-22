@@ -25,16 +25,16 @@ describe('when there is initially one user at db', () => {
     const usersAtStart = await helper.usersInDb()
 
     const newUser = {
-      username: 'mluukkai',
-      name: 'Matti Luukkainen',
-      password: 'salainen',
+        username: 'mluukkai',
+        name: 'Matti Luukkainen',
+        password: 'salainen',
     }
 
     await api
-      .post('/api/users')
-      .send(newUser)
-      .expect(201)
-      .expect('Content-Type', /application\/json/)
+        .post('/api/users')
+        .send(newUser)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
 
     const usersAtEnd = await helper.usersInDb()
     assert.strictEqual(usersAtEnd.length, usersAtStart.length + 1)
@@ -47,22 +47,50 @@ describe('when there is initially one user at db', () => {
     const usersAtStart = await helper.usersInDb()
 
     const newUser = {
-      username: 'root',
-      name: 'Superuser',
-      password: 'salainen',
+        username: 'root',
+        name: 'Superuser',
+        password: 'salainen',
     }
 
     const result = await api
-      .post('/api/users')
-      .send(newUser)
-      .expect(400)
-      .expect('Content-Type', /application\/json/)
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
 
     const usersAtEnd = await helper.usersInDb()
     assert(result.body.error.includes('expected `username` to be unique'))
 
     assert.strictEqual(usersAtEnd.length, usersAtStart.length)
   })
+})
+
+describe('not valid usernames or passwords are not accepted', () => {
+    test('username is too short', async () => {
+        const newUser = {
+            username: 'ro',
+            name: 'Robert C. Martin',
+            password: 'salainen',
+        } 
+        const result = await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+        assert(result.body.error.includes('username missing or too short'))
+    })
+    test('password is missing', async () => {
+    const newUser = {
+        username: 'admin',
+        name: 'Robert C. Martin', 
+    }
+    const result = await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+    assert(result.body.error.includes('password missing or too short'))
+})
 })
 
 after(async () => {
