@@ -11,7 +11,6 @@ const helper = require('./test_helper')
 const api = supertest(app)
 
 
-
 // Alustetaan tietokonata, ensin tyhjennetään ja sitten lisätään testidataa
 beforeEach(async () => {  
   await Blog.deleteMany({})
@@ -88,6 +87,40 @@ test('a blog without title or url is not added', async () => {
   }
   const blogsAtEnd = await helper.blogsInDb()
   assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+})
+
+test('a blog can be deleted', async () => {
+  const blogsAtStart = await helper.blogsInDb()
+  const blogToDelete = blogsAtStart[0] // otetaan ensimmäinen blogi pois
+
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
+
+  const titles = blogsAtEnd.map(r => r.title)
+  assert(!titles.includes(blogToDelete.title))
+})
+
+test('a blog can be updated', async () => {
+  const blogsAtStart = await helper.blogsInDb()
+  const blogToUpdate = blogsAtStart[0]
+  const updatedBlog = {
+    ...blogToUpdate,
+    likes: blogToUpdate.likes + 1
+  }
+
+  await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(updatedBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  const updatedBlogFromDb = blogsAtEnd.find(blog => blog.id === blogToUpdate.id)
+  assert.strictEqual(updatedBlogFromDb.likes, updatedBlog.likes)
 })
 
 // lopuksi suljetaan yhteys tietokantaan
