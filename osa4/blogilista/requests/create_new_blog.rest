@@ -1,10 +1,10 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2ODJmMDEwNTdhNTU1YjM4NTJjZDkxZTMiLCJpYXQiOjE3NDc5MTQzNjEsImV4cCI6MTc0NzkxNzk2MX0.GjV_pHJnGpIpmDoSLMHRyF30ilw7j7JWVeTSP0aL3F8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2ODJmMDEwNTdhNTU1YjM4NTJjZDkxZTMiLCJpYXQiOjE3NDc5OTUzMzYsImV4cCI6MTc0Nzk5ODkzNn0.J7osRhn_oMQM6A3k_L0EDp70KlnyZu0yqGrE2SnXoQE
 
 {
-  "title": "Toinen blogi",
+  "title": "Testataan userExtracion ",
   "author": "Janne",
   "url": "www.blogi.com",
-  "likes": 1
+  "likes": 10000
 }
