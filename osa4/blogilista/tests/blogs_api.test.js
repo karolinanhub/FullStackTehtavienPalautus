@@ -5,7 +5,9 @@ const supertest = require('supertest')
 const app = require('../app')
 require('dotenv').config({ path: '.env' })
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const helper = require('./test_helper')
+const { before } = require('lodash')
 // superagent-olio
 //Supertest huolehtii testattavan sovelluksen käynnistämisestä sisäisesti käyttämäänsä porttiin. 
 const api = supertest(app)
@@ -19,6 +21,25 @@ beforeEach(async () => {
   blogObject = new Blog(helper.initialBlogs[1])
   await blogObject.save()
 })
+let headers
+let user
+beforeEach(async () => {
+  const user1 = {
+    username: "Matti",
+    name: "Matti Meikäläinen",
+    password: "salasana"
+  }
+  await api
+    .post('/api/users')
+    .send(user1)
+  const result = await api
+    .post('/api/login')
+    .send(user1)
+  headers = {
+    'Authorization': `Bearer ${result.body.token}`
+  }
+  user = await User.findOne({ username: user1.username })
+})  
 
 test('blogs are returned as json', async () => {
   await api
@@ -51,6 +72,7 @@ test('a valid blog can be added ', async () => {
   }
   await api
     .post('/api/blogs')
+    .set(headers)
     .send(newBlog)
     .expect(201)
     .expect('Content-Type', /application\/json/)
@@ -67,10 +89,11 @@ test('a blog without likes has 0 likes', async () => {
     title: "TDD harms architecture",
     author: "Robert C. Martin",
     url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
-    user: user._id
+    user: user._id  
   }
   await api
     .post('/api/blogs')
+    .set(headers)
     .send(newBlog)
     .expect(201)
     .expect('Content-Type', /application\/json/)
@@ -95,6 +118,7 @@ test('a blog can be deleted', async () => {
   const blogToDelete = blogsAtStart[0] // otetaan ensimmäinen blogi pois
 
   await api
+    .set(headers)
     .delete(`/api/blogs/${blogToDelete.id}`)
     .expect(204)
 
