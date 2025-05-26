@@ -15,17 +15,31 @@ const App = () => {
     )
   }, [])
 
+  useEffect(() => { 
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
+    if (loggedUserJSON) { 
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token) 
+    } 
+  }, []) // efekti suoritetaan kun komponentti renderöidään ensimmäisen kerran
+
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
       const user = await loginService.login({ username, password, })
+      blogService.setToken(user.token)
+      window.localStorage.setItem(
+        'loggedBlogappUser', JSON.stringify(user)
+      )
+
       setUser(user) //token ja kirjautumistiedot tallennetaan
       setUsername('')
       setPassword('')
-     } catch (exception) { 
+    } catch (exception) {
       setErrorMessage('wrong credentials')
       setTimeout(() => { setErrorMessage(null) }, 5000)
-     }
+    }
   }
 
   const loginForm = () => (
@@ -33,7 +47,7 @@ const App = () => {
       <h2>log in to application</h2>
       <div>
         username
-          <input
+        <input
           type="text"
           value={username}
           name="Username"
@@ -42,7 +56,7 @@ const App = () => {
       </div>
       <div>
         password
-          <input
+        <input
           type="password"
           value={password}
           name="Password"
@@ -50,7 +64,7 @@ const App = () => {
         />
       </div>
       <button type="submit">login</button>
-    </form>      
+    </form>
   )
 
   const noteForm = () => (
@@ -66,16 +80,21 @@ const App = () => {
   return (
     <div>
       {!user && loginForm()}
-      {user && 
-      <div>
-        <h2>blogs</h2>
-        <p>{user.name} logged in</p>
-         {noteForm()}
-      </div>
-    } 
+      {user &&
+        <div>
+          <h2>blogs</h2>
+          <p>{user.name} logged in
+            <button onClick={() => {
+              setUser(null)
+              blogService.setToken(null) //tyhjennetään token logoutissa
+              window.localStorage.removeItem('loggedBlogappUser')
+            }}>logout</button></p>
+          {noteForm()}
+        </div>
+      }
     </div>
   )
-  
+
 }
 
 export default App
