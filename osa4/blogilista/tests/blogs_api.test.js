@@ -22,7 +22,7 @@ beforeEach(async () => {
   await blogObject.save()
 })
 let headers
-let user
+
 beforeEach(async () => {
   const user1 = {
     username: "Matti",
@@ -38,7 +38,6 @@ beforeEach(async () => {
   headers = {
     'Authorization': `Bearer ${result.body.token}`
   }
-  user = await User.findOne({ username: user1.username })
 })  
 
 test('blogs are returned as json', async () => {
@@ -85,16 +84,14 @@ test('a valid blog can be added ', async () => {
 
 test('a blog without likes has 0 likes', async () => {
   const newBlog = {
-    _id: "5a422ba71b54a676234d17fb",
     title: "TDD harms architecture",
     author: "Robert C. Martin",
     url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
-    user: user._id  
   }
   await api
     .post('/api/blogs')
-    .set(headers)
     .send(newBlog)
+    .set(headers)
     .expect(201)
     .expect('Content-Type', /application\/json/)
   const response = await api.get('/api/blogs')
