@@ -19,7 +19,7 @@ blogsRouter.post('/', async (request, response) => {
     return response.status(400).json({ error: 'userId missing or not valid' })
   }
   if (!body.likes){
-    blog.likes = 0
+    body.likes = 0
   }
   if (!body.title || !body.url) {
     return response.status(400).json({ error: 'title or url missing' }) // 400 Bad Request

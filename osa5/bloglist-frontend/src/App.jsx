@@ -5,6 +5,9 @@ import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
+  const [newTitle, setNewTitle] = useState('')
+  const [newAuthor, setNewAuthor] = useState('')
+  const [newUrl, setNewUrl] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -23,6 +26,37 @@ const App = () => {
       blogService.setToken(user.token) 
     } 
   }, []) // efekti suoritetaan kun komponentti renderöidään ensimmäisen kerran
+
+  const addBlog = (event) => {
+    event.preventDefault()
+    const blogObject = {
+      title: newTitle,
+      author: newAuthor,
+      url: newUrl,
+    }
+
+    blogService
+      .create(blogObject)
+      .then(returnedBlog => {
+        setBlogs(blogs.concat(returnedBlog))
+        setNewTitle('')
+        setNewAuthor('')
+        setNewUrl('')
+      })
+  }
+
+  const handleTitleChange = (event) => {
+    setNewTitle(event.target.value)
+  }
+
+  const handleAuthorChange = (event) => {
+    setNewAuthor(event.target.value)
+  }
+
+  const handleUrlChange = (event) => {
+    setNewUrl(event.target.value)
+  }
+
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -67,6 +101,41 @@ const App = () => {
     </form>
   )
 
+  const newBlogForm = () => (
+    <form onSubmit={addBlog}>
+      <h2>create new</h2>
+      <div>
+        title:
+        <input
+          type="text"
+          value={newTitle}
+          name="title"
+          onChange={handleTitleChange}
+        />
+      </div>
+      <div>
+        author:
+        <input
+          type="text"
+          value={newAuthor}
+          name="Author"
+          onChange={handleAuthorChange}
+        />
+      </div>
+      <div>
+        url:
+        <input
+          type="text"
+          value={newUrl}
+          name="url"
+          onChange={handleUrlChange}
+        />
+      </div>
+
+      <button type="submit">create</button>
+    </form>
+  )
+
   const noteForm = () => (
     <div>
       {blogs.map(blog =>
@@ -74,7 +143,6 @@ const App = () => {
       )}
     </div>
   )
-
 
 
   return (
@@ -89,7 +157,9 @@ const App = () => {
               blogService.setToken(null) //tyhjennetään token logoutissa
               window.localStorage.removeItem('loggedBlogappUser')
             }}>logout</button></p>
+          {newBlogForm()}
           {noteForm()}
+          
         </div>
       }
     </div>
