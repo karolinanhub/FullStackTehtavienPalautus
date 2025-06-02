@@ -44,13 +44,18 @@ const App = () => {
         setNewTitle('')
         setNewAuthor('')
         setNewUrl('')
-        setErrorMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
+        setErrorMessage({
+          message: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`, 
+          type: 'success'})
         setTimeout(() => {
           setErrorMessage(null);
         }, 5000); 
       })
       .catch (error => {
-        setErrorMessage('error adding blog')
+        setErrorMessage({
+          message: 'error adding blog',
+          type: 'error'
+        })
         setTimeout(() => {
           setErrorMessage(null);
         }, 5000); 
@@ -83,7 +88,10 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('wrong username or password')
+      setErrorMessage({
+        message: 'wrong username or password', 
+        type: 'error'
+      })  
       setTimeout(() => { 
         setErrorMessage(null) }, 5000)
     }
@@ -160,7 +168,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={errorMessage} />
+      <Notification message={errorMessage?.message} type={errorMessage?.type}/>
       {!user && loginForm()}
       {user &&
         <div>
