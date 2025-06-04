@@ -16,10 +16,11 @@ const Blog = ({ blog, updateBlog }) => {
   const showWhenVisible = { display: blogVisible ? '' : 'none' }
 
   const addLikes = () => {
-    console.log(`Adding like to blog: ${blog.title}`);
+    //console.log(`Adding like to blog: ${blog.title}`);
     const updatedBlog = {
       ...blog,
-      likes: blogObject.likes + 1
+      likes: blogObject.likes + 1,
+      user: blogObject.user
     }
     updateBlog(updatedBlog)
     setBlogObject(updatedBlog)
@@ -37,7 +38,7 @@ const Blog = ({ blog, updateBlog }) => {
       <button onClick={() => setblogVisible(false)}>hide</button>
       <p>{blog.url}</p>
       <p>{blogObject.likes} likes <button onClick={() => addLikes(blog.id)}>like</button></p>
-      <p>{blog.user?.name}</p>
+      <p>{blogObject.user?.name}</p>
     </div>
   </div>
 )}
