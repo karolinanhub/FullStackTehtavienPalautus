@@ -11,7 +11,7 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null)
   const blogFormRef = useRef()
 
 
@@ -21,13 +21,13 @@ const App = () => {
     )
   }, [])
 
-  useEffect(() => { 
+  useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
-    if (loggedUserJSON) { 
+    if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
-      blogService.setToken(user.token) 
-    } 
+      blogService.setToken(user.token)
+    }
   }, []) // efekti suoritetaan kun komponentti renderöidään ensimmäisen kerran
 
 
@@ -38,21 +38,21 @@ const App = () => {
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
         setErrorMessage({
-          message: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`, 
-          type: 'success'})
+          message: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
+          type: 'success' })
         setTimeout(() => {
-          setErrorMessage(null);
-        }, 5000); 
+          setErrorMessage(null)
+        }, 5000)
       })
       .catch (error => {
-        console.error('Error adding blog:', error) 
+        console.error('Error adding blog:', error)
         setErrorMessage({
           message: 'error adding blog',
           type: 'error'
         })
         setTimeout(() => {
-          setErrorMessage(null);
-        }, 5000); 
+          setErrorMessage(null)
+        }, 5000)
       })
   }
 
@@ -70,10 +70,10 @@ const App = () => {
       setPassword('')
     } catch (exception) {
       setErrorMessage({
-        message: 'wrong username or password', 
+        message: 'wrong username or password',
         type: 'error'
-      })  
-      setTimeout(() => { 
+      })
+      setTimeout(() => {
         setErrorMessage(null) }, 5000)
     }
   }
@@ -106,36 +106,36 @@ const App = () => {
   const blogForm = () => (
     <div>
       {blogs
-      .slice() //  pinnallinen kopio ettei muuteta alkuperäistä tilaa
-      .sort((a, b) => b.likes - a.likes)
-      .map(blog => 
-        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} deleteBlog={deleteBlog} user={user}/>
-      )}
+        .slice() //  pinnallinen kopio ettei muuteta alkuperäistä tilaa
+        .sort((a, b) => b.likes - a.likes)
+        .map(blog =>
+          <Blog key={blog.id} blog={blog} updateBlog={updateBlog} deleteBlog={deleteBlog} user={user}/>
+        )}
     </div>
   )
 
-const updateBlog = async (updatedBlog) => {
-  try {
-    // console.log(`Updating blog: ${updatedBlog.id}`);
-    const returnedBlog = await blogService.update(updatedBlog.id, updatedBlog)
-    setBlogs(blogs.map(blog => 
-      blog.id !== returnedBlog.id ? blog : returnedBlog
-    ))
-  } catch (error) {
-    console.error('Failed to update blog:', error)
-  }
-}
-
-const deleteBlog = async (newObject) => {
-  try { 
-    if (window.confirm(`Remove blog ${newObject.title} by ${newObject.author}?`)) {
-      await blogService.remove(newObject.id)
+  const updateBlog = async (updatedBlog) => {
+    try {
+      // console.log(`Updating blog: ${updatedBlog.id}`);
+      const returnedBlog = await blogService.update(updatedBlog.id, updatedBlog)
+      setBlogs(blogs.map(blog =>
+        blog.id !== returnedBlog.id ? blog : returnedBlog
+      ))
+    } catch (error) {
+      console.error('Failed to update blog:', error)
     }
-    setBlogs(blogs.filter(blog => blog.id !== newObject.id))
-  } catch (error) {
-    console.error('Failed to delete blog:', error)
   }
-}
+
+  const deleteBlog = async (newObject) => {
+    try {
+      if (window.confirm(`Remove blog ${newObject.title} by ${newObject.author}?`)) {
+        await blogService.remove(newObject.id)
+      }
+      setBlogs(blogs.filter(blog => blog.id !== newObject.id))
+    } catch (error) {
+      console.error('Failed to delete blog:', error)
+    }
+  }
 
   return (
     <div>
@@ -150,9 +150,9 @@ const deleteBlog = async (newObject) => {
               blogService.setToken(null) //tyhjennetään token logoutissa
               window.localStorage.removeItem('loggedBlogappUser')
             }}>logout</button></p>
-      <Togglable buttonLabel="new blog" ref={blogFormRef}>
-        <NewBlogForm createBlog={addBlog} />
-      </Togglable>
+          <Togglable buttonLabel="new blog" ref={blogFormRef}>
+            <NewBlogForm createBlog={addBlog} />
+          </Togglable>
           {blogForm()}
         </div>
       }

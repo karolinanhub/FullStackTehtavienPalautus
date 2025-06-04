@@ -1,10 +1,10 @@
 
 import { useState } from 'react'
 
-const NewBlogForm = ({createBlog}) => {
+const NewBlogForm = ( { createBlog } ) => {
 
   const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')  
+  const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
 
   const handleTitleChange = (event) => {
@@ -34,7 +34,7 @@ const NewBlogForm = ({createBlog}) => {
   }
 
   return (
-    <form onSubmit={addBlog}>
+    <form onSubmit={ addBlog }>
       <h2>create new</h2>
       <div>
         title:
