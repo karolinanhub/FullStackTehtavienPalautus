@@ -105,7 +105,10 @@ const App = () => {
 
   const blogForm = () => (
     <div>
-      {blogs.map(blog =>
+      {blogs
+      .slice() //  pinnallinen kopio ettei muuteta alkuperäistä tilaa
+      .sort((a, b) => b.likes - a.likes)
+      .map(blog => 
         <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
       )}
     </div>
@@ -113,12 +116,11 @@ const App = () => {
 
 const updateBlog = async (updatedBlog) => {
   try {
-    console.log(`Updating blog: ${updatedBlog.id}`);
+    // console.log(`Updating blog: ${updatedBlog.id}`);
     const returnedBlog = await blogService.update(updatedBlog.id, updatedBlog)
-    setBlogs(prevBlogs => prevBlogs.map(blog =>
+    setBlogs(blogs.map(blog => 
       blog.id !== returnedBlog.id ? blog : returnedBlog
     ))
-
   } catch (error) {
     console.error('Failed to update blog:', error)
   }
