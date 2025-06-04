@@ -109,7 +109,7 @@ const App = () => {
       .slice() //  pinnallinen kopio ettei muuteta alkuperäistä tilaa
       .sort((a, b) => b.likes - a.likes)
       .map(blog => 
-        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
+        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} deleteBlog={deleteBlog} user={user}/>
       )}
     </div>
   )
@@ -126,6 +126,16 @@ const updateBlog = async (updatedBlog) => {
   }
 }
 
+const deleteBlog = async (newObject) => {
+  try { 
+    if (window.confirm(`Remove blog ${newObject.title} by ${newObject.author}?`)) {
+      await blogService.remove(newObject.id)
+    }
+    setBlogs(blogs.filter(blog => blog.id !== newObject.id))
+  } catch (error) {
+    console.error('Failed to delete blog:', error)
+  }
+}
 
   return (
     <div>
