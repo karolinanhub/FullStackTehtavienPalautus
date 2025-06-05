@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 
+
 const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
   const [blogVisible, setblogVisible] = useState(false)
   const [blogObject, setBlogObject] = useState(blog)
