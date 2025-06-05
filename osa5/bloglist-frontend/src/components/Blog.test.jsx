@@ -39,4 +39,16 @@ test('renderöi blogin url ja likes, kun painetaan view', async () => {
   expect(screen.getByText(`${blog.likes} likes`)).toBeVisible()
 })
 
+test('like-nappia painetaan kahdesti ja tapahtumankäsittelijäfunktiota kutsutaan kaksi kertaa.', async () => {
+  render(<Blog blog={blog} updateBlog={updateBlogMock} user={user} deleteBlog={deleteBlogMock}/>)
+
+  const viewButton = screen.getByText('view')
+  await user.click(viewButton)
+
+  const likeButton = screen.getByText('like')
+  await user.click(likeButton)
+  await user.click(likeButton)
+
+  expect(updateBlogMock.mock.calls).toHaveLength(2)
+})
 
