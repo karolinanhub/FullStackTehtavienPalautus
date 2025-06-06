@@ -35,7 +35,7 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
   const userCanDelete = user && blogObject.user && user.username === blogObject.user.username
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} data-testid="blog">
       <div style={hideWhenVisible}>
         {blog.title} {blog.author}
         <button onClick={() => setblogVisible(true)}>view</button>

@@ -152,7 +152,7 @@ const App = () => {
               blogService.setToken(null) //tyhjennetään token logoutissa
               window.localStorage.removeItem('loggedBlogappUser')
             }}>logout</button></p>
-          <Togglable buttonLabel="new blog" ref={blogFormRef}  data-testid='new blog'>
+          <Togglable buttonLabel="new blog" ref={blogFormRef}>
             <NewBlogForm createBlog={addBlog} />
           </Togglable>
           {blogForm()}
