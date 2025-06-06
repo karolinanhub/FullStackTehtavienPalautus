@@ -8,7 +8,7 @@ describe('Blog app', () => {
       data: {
         name: 'Matti Luukkainen',
         username: 'mluukkai',
-        password: 'salainen'
+        password: 'salainen',
       }
     })
 
@@ -72,6 +72,29 @@ describe('Blog app', () => {
       await likeButton.click()
 
       await expect(page.locator('p', { hasText: /1 likes/ })).toBeVisible()
+    })
+
+    test('a blog can be removed by the creator', async ({ page }) => {
+      await page.getByRole('button', { name: 'new blog' }).click()
+      await page.getByTestId('title').fill('Sadas testi')
+      await page.getByTestId('author').fill('TestB')
+      await page.getByTestId('url').fill('http://testblog.com')
+      await page.getByRole('button', { name: 'create' }).click()
+      const blog = page.getByTestId('blog').filter({ hasText: 'Sadas testi' }).first()
+      await expect(blog).toBeVisible()
+      await expect(blog.getByRole('button', { name: 'view' })).toBeVisible()
+      await blog.getByRole('button', { name: 'view' }).click()
+
+      const removeButton = blog.getByRole('button', { name: 'remove' })
+      await expect(removeButton).toBeVisible() //TODO: ei toimi, koska removeButton ei näy jostain syystä
+
+      page.once('dialog', dialog => {
+        dialog.accept()
+      })
+
+      await removeButton.click()
+
+      await expect(blog).not.toBeVisible()
     })
   })
 
