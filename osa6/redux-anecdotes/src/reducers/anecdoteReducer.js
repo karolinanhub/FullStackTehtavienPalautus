@@ -42,7 +42,7 @@ const reducer = (state = initialState, action) => {
 }
 
 
-export const createAnectode = (content) => {  return {
+export const createAnecdote = (content) => {  return {
     type: 'NEW_ANECDOTE',
     payload: {
       content,
