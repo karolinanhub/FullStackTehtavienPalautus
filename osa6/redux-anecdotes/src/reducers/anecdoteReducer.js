@@ -1,3 +1,5 @@
+import { createSlice } from '@reduxjs/toolkit'
+
 const anecdotesAtStart = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -7,7 +9,7 @@ const anecdotesAtStart = [
   'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
 ]
 
-const getId = () => (100000 * Math.random()).toFixed(0)
+export const getId = () => (100000 * Math.random()).toFixed(0)
 
 const asObject = (anecdote) => {
   return {
@@ -19,13 +21,14 @@ const asObject = (anecdote) => {
 
 const initialState = anecdotesAtStart.map(asObject)
 
-const reducer = (state = initialState, action) => {
-  console.log('state now: ', state)
-  console.log('action', action)
-  switch(action.type) {
-    case 'NEW_ANECDOTE':
-      return [...state, action.payload]
-    case 'VOTE': {
+const anecdoteSlice = createSlice({
+  name: 'anecdotes',
+  initialState,
+  reducers: {
+    newAnecdote: (state, action) => {
+      state.push(action.payload) //immer kirjasto luo uuden immutablen tilan
+    },
+    voteAnecdote: (state, action) => {
       const id = action.payload.id
       const anecdoteToVote = state.find(a => a.id === id)
       const votedAnecdote = {
@@ -36,27 +39,9 @@ const reducer = (state = initialState, action) => {
         anecdote.id !== id ? anecdote : votedAnecdote
       ).sort((a, b) => b.votes - a.votes)
     }
-    default:
-      return state 
-    }
-}
-
-
-export const createAnecdote = (content) => {  return {
-    type: 'NEW_ANECDOTE',
-    payload: {
-      content,
-      id: getId(),
-      votes: 0
-    }
   }
-}
+})  
 
-export const vote = (id) => {
-  return {
-    type: 'VOTE',
-    payload: {id}
-  }
-} 
 
-export default reducer
+export const { newAnecdote, voteAnecdote } = anecdoteSlice.actions
+export default anecdoteSlice.reducer
