@@ -34,7 +34,8 @@ const anecdoteSlice = createSlice({
       const votedAnecdote = {
         ...anecdoteToVote,
         votes: anecdoteToVote.votes + 1
-      }
+      } 
+      // console.log(' you voted: ', votedAnecdote.content )
       return state.map(anecdote =>
         anecdote.id !== id ? anecdote : votedAnecdote
       ).sort((a, b) => b.votes - a.votes)

@@ -1,6 +1,7 @@
 import { useDispatch } from 'react-redux'
 import { newAnecdote } from '../reducers/anecdoteReducer'
 import { getId } from '../reducers/anecdoteReducer'
+import { showMessage } from '../reducers/notificationReducer'
 
 const AnecdoteForm = () => {
   const dispatch = useDispatch()
@@ -17,7 +18,8 @@ const AnecdoteForm = () => {
     }
 
     dispatch(newAnecdote(anecdoteObject))
-    console.log('created new: ', content)
+    dispatch(showMessage({ message: `You created: "${content}"` }))
+    //console.log('created new: ', content)
   }
 
   return (
