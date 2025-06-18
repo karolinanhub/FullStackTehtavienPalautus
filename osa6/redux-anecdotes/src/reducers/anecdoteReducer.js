@@ -59,6 +59,17 @@ export const newAnecdote = content => {
     const newA = await anecdotesService.createNew(content)
     dispatch(appendAnecdotes(newA))  }}
 
+//getState hakee datan
+export const voteAnecdoteAPI = (id) => {
+  return async (dispatch, getState) => {
+    const anecdoteToChange = getState().anecdotes.find(a => a.id === id)
+    const updatedAnecdote = { ...anecdoteToChange, votes: anecdoteToChange.votes + 1 }
+    const returnedAnecdote = await anecdotesService.updateAnecdote(updatedAnecdote)
+    dispatch(voteAnecdote(returnedAnecdote))  
+  }
+}
+
+
 export const { voteAnecdote, appendAnecdotes, setAnecdotes } = anecdoteSlice.actions
 
 export default anecdoteSlice.reducer

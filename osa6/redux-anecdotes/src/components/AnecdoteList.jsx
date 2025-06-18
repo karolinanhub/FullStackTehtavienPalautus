@@ -1,6 +1,6 @@
 import { useDispatch , useSelector} from 'react-redux'
-import { voteAnecdote } from '../reducers/anecdoteReducer'
 import { showMessage } from '../reducers/notificationReducer'
+import { voteAnecdoteAPI } from '../reducers/anecdoteReducer'
 
 
 
@@ -16,7 +16,7 @@ const visibleAnecdotes = filter === 'ALL'
     )
 
   const vote = (anecdote) => {
-  dispatch(voteAnecdote({ id: anecdote.id }))
+  dispatch(voteAnecdoteAPI(anecdote.id))
   dispatch(showMessage({ message: `You voted: "${anecdote.content}"`}))
 }
 
