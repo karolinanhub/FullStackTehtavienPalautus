@@ -17,7 +17,7 @@ const visibleAnecdotes = filter === 'ALL'
 
   const vote = (anecdote) => {
   dispatch(voteAnecdoteAPI(anecdote.id))
-  dispatch(showMessage({ message: `You voted: "${anecdote.content}"`}))
+    dispatch(showMessage({ message: `You voted: "${anecdote.content}"` }, 10))
 }
 
 
