@@ -1,20 +1,10 @@
 import ReactDOM from 'react-dom/client'
 import { Provider } from 'react-redux'
-import anecdotesReducer, {setAnecdotes} from './reducers/anecdoteReducer'
-import filterReducer from './reducers/filterReducer'
-import notificationReducer from './reducers/notificationReducer'
-import anecdotesService from './services/anecdotes'
-import { configureStore } from '@reduxjs/toolkit'
 import App from './App'
+import store from './store'
+import anecdotesService from './services/anecdotes'
+import {setAnecdotes} from './reducers/anecdoteReducer'
 
-
-const store = configureStore({
-  reducer: {
-    anecdotes: anecdotesReducer,
-    filter: filterReducer,
-    notification: notificationReducer
-  }
-})
 
 anecdotesService.getAll().then(anecdotes =>  
   store.dispatch(setAnecdotes(anecdotes))
