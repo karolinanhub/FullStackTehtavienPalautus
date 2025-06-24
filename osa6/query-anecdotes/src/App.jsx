@@ -1,11 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import AnecdoteForm  from './components/AnecdoteForm'
 import Notification from './components/Notification'
+import VoteButton from './components/voteButton'
 import { getAnecdotes, createAnecdote, updateAnecdote } from './requests'
+
 
 const App = () => {
 
-  const queryClient = useQueryClient()
 
   // kysely useQuery, asynkroninen data on sidottu avaimella
   const result = useQuery({    
@@ -18,18 +19,6 @@ const App = () => {
 
   const anecdotes = result.data
 
-  const voteMutation = useMutation({
-    mutationFn: updateAnecdote,
-    onSuccess: (updatedAnecdote) => {
-      const anecdotes = queryClient.getQueryData(['anecdotes'])
-      queryClient.setQueryData(['anecdotes'], anecdotes.map(a => a.id === updatedAnecdote.id ? updatedAnecdote : a))
-    }
-  })  
-
- const handleVote = (anecdote) => {
-    console.log('vote for: ', anecdote.content)
-    voteMutation.mutate({ ...anecdote, votes: anecdote.votes + 1 })
-  }
 
   if ( result.isLoading ) { 
     return <div>loading data...</div>  
@@ -61,7 +50,7 @@ const App = () => {
           </div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => handleVote(anecdote)}>vote</button>
+             <VoteButton anecdote={anecdote} />
           </div>
         </div>
       )}

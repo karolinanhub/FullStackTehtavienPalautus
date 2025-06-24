@@ -1,10 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { getAnecdotes, createAnecdote } from '../requests'
+import { useNotificationDispatch } from '../hooks/useNotification'
 
 
 const AnecdoteForm = () => {
 
 const queryClient = useQueryClient()
+const dispatch = useNotificationDispatch()
 
 const newAnecdotesMutation = useMutation({ 
   mutationFn: createAnecdote, 
@@ -12,8 +14,9 @@ const newAnecdotesMutation = useMutation({
     const anecdotes = queryClient.getQueryData(['anecdotes'])
     console.log('cached anecdotes:', anecdotes)
     console.log('new anecdote:', newAnecdote)
+    const anecdoteWithVotes = { ...newAnecdote, votes: 0 }
     // Invalidate and refetch
-    queryClient.setQueryData(['anecdotes'], anecdotes.concat(newAnecdote))
+    queryClient.setQueryData(['anecdotes'], anecdotes.concat(anecdoteWithVotes))
   }
 })
 
@@ -23,7 +26,12 @@ const addAnecdote = async (event) => {
   event.target.anecdote.value = ''
   newAnecdotesMutation.mutate({ content })
   console.log('new anecdote', content)
+  await dispatch({ type: 'SHOW', payload: `You added: ${content}` })
+  setTimeout(() => {
+  dispatch({ type: 'HIDE' })
+  }, 5000)
 }
+
 
 return (
   <div>
